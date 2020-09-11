@@ -1,14 +1,11 @@
 import pygame
 from math import sqrt
+from colors import BLACK, GREY, WHITE
 
 pygame.font.init()
 
-BLACK = (0, 0, 0)
-GREY = (50, 50, 50)
-WHITE = (250, 250, 250)
-GREEN = (50, 255, 100)
-BLUE = (0, 0, 255)
-
+# Test Sudoku Board
+# CREDIT: https://en.wikipedia.org/wiki/Sudoku
 sudoku_board = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -22,6 +19,7 @@ sudoku_board = [
 ]
 
 
+# Main Class That Defines Each Cell of the Grid (9*9)
 class Cell:
     def __init__(self, value, position):
         self.color = GREY
@@ -32,6 +30,14 @@ class Cell:
         self.rect = pygame.Rect(self.position, self.size)
 
     def draw(self, window):
+
+        """
+        Responsible for Drawing the Cell based on the Class's Value
+
+        Args:
+            window: Main Window that you want the cell drawn upon
+        """
+
         pygame.draw.rect(window, WHITE, self.rect, 0)
         pygame.draw.rect(window, self.color, self.rect, 1)
 
@@ -63,12 +69,17 @@ class Grid:
         ]
 
     def draw_grid(self):
+
+        """Responsible for calling every Cell in Cells and calling their Draw Method"""
+
         for row in self.cells:
             for cell in row:
                 cell.draw(self.window)
         self.draw_lines()
 
     def draw_lines(self):
+
+        """Draws all of the lines that make up the 3 * 3 Grid's main Squares"""
 
         x = y = self.side_buffer
 
@@ -95,6 +106,8 @@ class Grid:
                 )
 
     def solve(self):
+
+        """Backtracking Algorithm that solves Sudoku Board"""
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -130,6 +143,18 @@ class Grid:
         return False
 
     def is_valid(self, value, position):
+
+        """
+        Checks whether given Value is valid based on Position
+
+        Args:
+            value (int): Value to be tested
+            position (tuple): X and Y Coordinates of a Cell
+
+        Returns:
+            bool: True if Value is valid and False if not valid
+        """
+
         x, y = position
         max_length = len(self.board)
 
@@ -150,6 +175,9 @@ class Grid:
         return True
 
     def check_board(self):
+
+        """Checks for an empty position"""
+
         for row_index in range(len(self.board)):
             for col_index in range(len(self.board[row_index])):
                 if not self.board[row_index][col_index]:
@@ -167,6 +195,9 @@ class SudokuSolver:
         self.run()
 
     def run(self):
+
+        """Main Run Method"""
+
         while True:
             self.window.fill(self.bk_color)
 
